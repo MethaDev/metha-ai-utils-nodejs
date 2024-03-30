@@ -38,5 +38,22 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(err.status || 500).send();
 });
 
-export const handler = serverless(app);
+// export const handler = serverless(app);
+export async function handler(event: any) {
+  // Convert the event object to a JSON string
+  const eventString = JSON.stringify(event, null, 2);
+  
+  // Log the event to CloudWatch
+  console.log("Received event:", eventString);
+
+  // Return the event in the response body
+  return {
+      statusCode: 200,
+      headers: {
+          "Content-Type": "application/json"
+      },
+      // Include the event in the response body
+      body: JSON.stringify({ message: "Event received", event: JSON.parse(eventString) })
+  };
+}
 export default app;
