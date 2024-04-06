@@ -46,14 +46,16 @@ export async function handler(event: any) {
   // Log the event to CloudWatch
   console.log("Received event:", eventString);
 
+  app.use('/api', routes);
+
   // Return the event in the response body
-  return {
-      statusCode: 200,
-      headers: {
-          "Content-Type": "application/json"
-      },
-      // Include the event in the response body
-      body: JSON.stringify({ message: "Event received", event: JSON.parse(eventString) })
-  };
+  // return {
+  //     statusCode: 200,
+  //     headers: {
+  //         "Content-Type": "application/json"
+  //     },
+  //     // Include the event in the response body
+  //     body: JSON.stringify({ message: "Event received", event: JSON.parse(eventString) })
+  // };
 }
 export default app;
