@@ -34,7 +34,7 @@ async function getTemplateHtml() {
     }
 }
 
-async function generatePdf(): Promise<any> {
+export async function generatePdf(): Promise<any> {
     const htmlTemplate = await generateHTML();
     // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
     // we are using headless mode
@@ -49,7 +49,7 @@ async function generatePdf(): Promise<any> {
     return generatedPdf;
 }
 
-async function generateHTML(): Promise<any> {
+export async function generateHTML(): Promise<any> {
   const data = {
     fullName: "bla bla",
     email: "blabla@gmail.com",
