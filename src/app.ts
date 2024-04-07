@@ -39,34 +39,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(err.status || 500).send();
 });
 
-export async function handler(event: any) {
-  // Log the event to CloudWatch
-  const eventString = JSON.stringify(event, null, 2);
-  console.log("Received event:", eventString);
-
-  let response = {
-    statusCode: 404,
-    body: JSON.stringify({
-      error: "No Routes"
-    })
-  };
-
-  if (event.path == "/api/generate/pdf") {
-    response = await generatePdf();
-  } else if (event.path == "/api/generate/view") {
-    response = await generateHTML();
-  } else if (event.path == "/api/generate/viewtest") {
-    response = {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: "viewtest"
-      })
-    };
-  }
-
-  return response;
-}
-
+module.exports.handler = serverless(app);
 // export const handler = serverless(app);
 // export async function handler(event: any) {
 //   // Convert the event object to a JSON string
