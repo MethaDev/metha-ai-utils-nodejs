@@ -1,14 +1,14 @@
 import { Request, Response, Router } from 'express';
-import { generateTemplate, generateTemplateOld, generateView } from "../../controllers/pdf";
+import { summarizePDFDownload, summarizePDFEMail, generateView } from "../../controllers/pdf";
 
 const router = Router();
 
-router.get("/generate", generateTemplate);
-router.get("/generateOld", generateTemplateOld);
-router.get("/view", generateView);
+router.get("/summarize/download", summarizePDFDownload);
+router.get("/summarize/email", summarizePDFEMail);
+router.get("/summarize/view", generateView);
 
-router.post("/generate", generateTemplate);
-router.post("/generateOld", generateTemplateOld);
-router.post("/view", generateView);
+router.post("/summarize/download", summarizePDFDownload);
+router.post("/summarize/email", summarizePDFEMail);
+router.post("/summarize/view", generateView);
 
 export default router;

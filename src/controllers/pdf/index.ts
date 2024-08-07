@@ -6,15 +6,71 @@ import fs from "fs";
 import path from "path";
 import utils from "util"
 import hb from "handlebars";
+import { config } from "dotenv";
+import nodemailer from "nodemailer";
+// import { SESClient } from "@aws-sdk/client-ses";
+import * as AWS from "@aws-sdk/client-ses";
 
+const { AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, AWS_SES_REGION } = process.env;
 
-export const generateTemplate = asyncHandler(
+const ses = new AWS.SES({
+  apiVersion: "2012-10-17",
+  region: "us-east-1",
+  credentials: {
+    accessKeyId: "",
+    secretAccessKey: "",
+  },
+});
+
+const transporter = nodemailer.createTransport({
+  SES: {
+    ses,
+    aws: AWS
+  },
+});
+
+export const summarizePDFEMail = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const pdf = await generatePdf();
-        res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length });
-        res.send(pdf)
+      res.send(200);
+      const pdf = await generatePdf();
+      await sendMail(pdf);
     }
 );
+
+export const summarizePDFDownload = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+      const pdf = await generatePdf();
+      res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length });
+      res.send(pdf)
+  }
+);
+
+async function sendMail(file: any) {
+  try {
+    const mailOptions = {
+      from: {
+        name: "Elad Yefet",
+        address: "elad.y@metha.ai"
+      },
+      to: "elad.y@metha.ai",
+      // to: "lior.m@metha.ai",
+      subject: "Your report is ready - Test",
+      text: "Your report is ready",
+      html: "<h1>Your report is ready</h1>",
+      attachments: [{
+          filename: "report",
+          content: file,
+          contentType: "application/pdf",
+          ContentLength: file.length
+      }],
+    };
+
+    const response = await transporter.sendMail(mailOptions);
+
+  } catch (error) {
+    console.error("SendMail: " + error);
+  }
+}
 
 export const generateView = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {

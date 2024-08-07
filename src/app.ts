@@ -6,7 +6,6 @@ import cors from "cors";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-import { generateTemplate, generateTemplateOld, generateView, generateHTML, generatePdf } from "./controllers/pdf";
 ///////////////////
 
 import routes from './routes';
