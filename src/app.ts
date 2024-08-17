@@ -40,6 +40,14 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 
 module.exports.handler = serverless(app);
 // export const handler = serverless(app);
+
+// const server = awsServerlessExpress.createServer(app);
+
+// exports.handler = (event, context) => {
+//   awsServerlessExpress.proxy(server, event, context);
+// };
+
+// export const handler = serverless(app);
 // export async function handler(event: any) {
 //   // Convert the event object to a JSON string
 //   const eventString = JSON.stringify(event, null, 2);
