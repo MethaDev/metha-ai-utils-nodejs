@@ -8,6 +8,9 @@ import app from "./app";
 // var debug = require('debug')('metha-ai-utils-nodejs:server');
 import debug from "debug";
 import http from "http";
+import { config } from "dotenv";
+
+config();
 
 /**
  * Get port from environment and store in Express.

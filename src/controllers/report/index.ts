@@ -10,7 +10,9 @@ import { config } from "dotenv";
 import nodemailer from "nodemailer";
 import * as AWSClientSES from "@aws-sdk/client-ses";
 
-const { SES_REGION, SES_ACCESS_KEY_ID, SES_SECRET_ACCESS_KEY } = process.env;
+config();
+
+console.log("region = " + process.env.SES_REGION);
 
 const ses = new AWSClientSES.SES({
   apiVersion: "2012-10-17",
