@@ -34,7 +34,7 @@ export const summarizePDFEMail = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
       res.send(200);
       const pdf = await generatePdf();
-      await sendMail(pdf);
+      await sendMail(pdf, "elad.y@metha.ai");
     }
 );
 
@@ -42,18 +42,18 @@ export const summarizePDFDownload = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
       const pdf = await generatePdf();
       res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length });
-      res.send(pdf)
+      res.send(pdf);
   }
 );
 
-async function sendMail(file: any) {
+async function sendMail(file: any, sendTo: string) {
   try {
     const mailOptions = {
       from: {
         name: "Elad Yefet",
         address: "elad.y@metha.ai"
       },
-      to: "elad.y@metha.ai",
+      to: sendTo,
       // to: "lior.m@metha.ai",
       subject: "Your report is ready - Test",
       text: "Your report is ready",
