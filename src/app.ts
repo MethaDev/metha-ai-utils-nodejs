@@ -1,6 +1,4 @@
 import express from 'express';
-import serverless from 'serverless-http';
-////////////////////
 import { engine } from 'express-handlebars';
 import cors from "cors";
 import path from "path";
@@ -38,7 +36,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(err.status || 500).send();
 });
 
-module.exports.handler = serverless(app);
+module.exports.handler = app;
 // export const handler = serverless(app);
 
 // const server = awsServerlessExpress.createServer(app);

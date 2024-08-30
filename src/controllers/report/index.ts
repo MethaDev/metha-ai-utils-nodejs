@@ -8,24 +8,23 @@ import utils from "util"
 import hb from "handlebars";
 import { config } from "dotenv";
 import nodemailer from "nodemailer";
-// import { SESClient } from "@aws-sdk/client-ses";
-import * as AWS from "@aws-sdk/client-ses";
+import * as AWSClientSES from "@aws-sdk/client-ses";
 
-const { AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, AWS_SES_REGION } = process.env;
+const { SES_REGION, SES_ACCESS_KEY_ID, SES_SECRET_ACCESS_KEY } = process.env;
 
-const ses = new AWS.SES({
+const ses = new AWSClientSES.SES({
   apiVersion: "2012-10-17",
-  region: "us-east-1",
+  region: process.env.SES_REGION || "",
   credentials: {
-    accessKeyId: "",
-    secretAccessKey: "",
+    accessKeyId: process.env.SES_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.SES_SECRET_ACCESS_KEY || "",
   },
 });
 
 const transporter = nodemailer.createTransport({
   SES: {
     ses,
-    aws: AWS
+    aws: AWSClientSES
   },
 });
 
