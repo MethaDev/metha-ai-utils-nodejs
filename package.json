@@ -16,7 +16,8 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist && tsc",
-    "start": "node ./bin/www",
+    "start": "node index",
+    "start2": "node ./bin/www",
     "devtemp": "nodemon src/app.ts",
     "dev": "nodemon src/index.ts",
     "start-debug": "set DEBUG=myapp:* & npm start"
