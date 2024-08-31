@@ -13,7 +13,6 @@ phases:
       - echo Building the application...
       - npm run build
       - echo "Zipping deployment package..."
-      - cd lib
       - zip -r9 ../deployment_package.zip .
       - cd ..
       - zip -g deployment_package.zip dist
