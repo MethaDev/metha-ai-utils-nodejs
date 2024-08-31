@@ -14,8 +14,6 @@ phases:
       - npm run build
       - echo "Zipping deployment package..."
       - zip -r9 ../deployment_package.zip .
-      - cd ..
-      - zip -g deployment_package.zip dist
 
   post_build:
     commands:
