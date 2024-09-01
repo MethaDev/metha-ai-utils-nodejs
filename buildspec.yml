@@ -14,11 +14,12 @@ phases:
       - npm run build
       - echo "Zipping deployment package..."
       - zip -r9 ../deployment_package.zip .
+      - cd ..
+      - aws lambda update-function-code --function-name metha-ai-utils-nodejs --zip-file fileb://deployment_package.zip
 
   post_build:
     commands:
       - echo Build completed on `date`
-      - aws lambda update-function-code --function-name metha-ai-utils-nodejs --zip-file fileb://deployment_package.zip
       - echo "DONE!"
 
 artifacts:
