@@ -36,6 +36,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(err.status || 500).send();
 });
 
+console.log("my log test1");
 module.exports.handler = app;
 // export const handler = serverless(app);
 

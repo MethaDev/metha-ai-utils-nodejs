@@ -23,6 +23,7 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.get('/', async (req: Request, res: Response) => {
   try {
+    console.log("my books log test1");
     const books = [
       {
         id: 'ebb3d966-74e4-11ed-8db0-136d663b98e7',
@@ -31,7 +32,7 @@ router.get('/', async (req: Request, res: Response) => {
       },
     ];
 
-    console.debug(`Returning the books ${JSON.stringify(books)}`);
+    console.log("my book test2");
 
     res.status(200).json(books);
   } catch (error) {
