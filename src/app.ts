@@ -1,10 +1,10 @@
 import express from 'express';
+import serverless from "serverless-http";
 import { engine } from 'express-handlebars';
 import cors from "cors";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-import serverless from "serverless-http";
 ///////////////////
 
 import routes from './routes';
@@ -28,6 +28,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 //////////////////////
 
 app.use('/api', routes);
+
+app.use('/test', (req, res) => {
+  res.send("test");
+});
 
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.status(404).send();
