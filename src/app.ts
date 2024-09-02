@@ -4,6 +4,7 @@ import cors from "cors";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
+import serverless from "serverless-http";
 ///////////////////
 
 import routes from './routes';
@@ -37,7 +38,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 });
 
 console.log("my log test1");
-module.exports.handler = app;
+module.exports.handler = serverless(app);
 // export const handler = serverless(app);
 
 // const server = awsServerlessExpress.createServer(app);
