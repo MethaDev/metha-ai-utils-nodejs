@@ -12,23 +12,25 @@ import * as AWSClientSES from "@aws-sdk/client-ses";
 
 config();
 
-console.log("region = " + process.env.SES_REGION);
+console.log("SES_REGION = " + process.env.SES_REGION);
+console.log("SES_ACCESS_KEY_ID = " + process.env.SES_ACCESS_KEY_ID);
+console.log("SES_SECRET_ACCESS_KEY = " + process.env.SES_SECRET_ACCESS_KEY);
 
-// const ses = new AWSClientSES.SES({
-//   apiVersion: "2012-10-17",
-//   region: process.env.SES_REGION || "us-east-1",
-//   credentials: {
-//     accessKeyId: process.env.SES_ACCESS_KEY_ID || "",
-//     secretAccessKey: process.env.SES_SECRET_ACCESS_KEY || "",
-//   },
-// });
+const ses = new AWSClientSES.SES({
+  apiVersion: "2012-10-17",
+  region: process.env.SES_REGION || "us-east-1",
+  credentials: {
+    accessKeyId: process.env.SES_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.SES_SECRET_ACCESS_KEY || "",
+  },
+});
 
-// const transporter = nodemailer.createTransport({
-//   SES: {
-//     ses,
-//     aws: AWSClientSES
-//   },
-// });
+const transporter = nodemailer.createTransport({
+  SES: {
+    ses,
+    aws: AWSClientSES
+  },
+});
 
 export const summarizePDFEMail = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -47,30 +49,30 @@ export const summarizePDFDownload = asyncHandler(
 );
 
 async function sendMail(file: any, sendTo: string) {
-  // try {
-  //   const mailOptions = {
-  //     from: {
-  //       name: "Elad Yefet",
-  //       address: "elad.y@metha.ai"
-  //     },
-  //     to: sendTo,
-  //     // to: "lior.m@metha.ai",
-  //     subject: "Your report is ready - Test",
-  //     text: "Your report is ready",
-  //     html: "<h1>Your report is ready</h1>",
-  //     attachments: [{
-  //         filename: "report",
-  //         content: file,
-  //         contentType: "application/pdf",
-  //         ContentLength: file.length
-  //     }],
-  //   };
+  try {
+    const mailOptions = {
+      from: {
+        name: "Elad Yefet",
+        address: "elad.y@metha.ai"
+      },
+      to: sendTo,
+      // to: "lior.m@metha.ai",
+      subject: "Your report is ready - Test",
+      text: "Your report is ready",
+      html: "<h1>Your report is ready</h1>",
+      attachments: [{
+          filename: "report",
+          content: file,
+          contentType: "application/pdf",
+          ContentLength: file.length
+      }],
+    };
 
-  //   const response = await transporter.sendMail(mailOptions);
+    const response = await transporter.sendMail(mailOptions);
 
-  // } catch (error) {
-  //   console.error("SendMail: " + error);
-  // }
+  } catch (error) {
+    console.error("SendMail: " + error);
+  }
 }
 
 export const generateView = asyncHandler(

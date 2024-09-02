@@ -12,8 +12,6 @@ router.post('/', async (req: Request, res: Response) => {
       },
     ];
 
-    console.debug(`Returning the books ${JSON.stringify(books)}`);
-
     res.status(200).json(books);
   } catch (error) {
     console.error('An error ocurred:', error);
@@ -23,7 +21,6 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    console.log("my books log test1");
     const books = [
       {
         id: 'ebb3d966-74e4-11ed-8db0-136d663b98e7',
@@ -31,8 +28,6 @@ router.get('/', async (req: Request, res: Response) => {
         author: 'Some Author',
       },
     ];
-
-    console.log("my book test2");
 
     res.status(200).json(books);
   } catch (error) {
@@ -49,8 +44,6 @@ router.get('/:id', async (req: Request, res: Response) => {
       author: 'Some Author',
     };
 
-    console.debug(`Returning the book [${JSON.stringify(book)}]`);
-
     res.status(200).json(book);
   } catch (error) {
     console.error('An error ocurred:', error);
@@ -60,8 +53,6 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 router.post('/', async (req: Request, res: Response) => {
   try {
-    console.debug(`Creating the book [${JSON.stringify(req.body)}]`);
-
     res.status(201).json({
       id: 'ebb3d966-74e4-11ed-8db0-136d663b98e7',
       ...req.body,
@@ -79,8 +70,6 @@ router.put('/:id', async (req: Request, res: Response) => {
       ...req.body,
     };
 
-    console.debug(`Updating the book [${JSON.stringify(book)}]`);
-
     res.status(200).json(book);
   } catch (error) {
     console.error('An error occurred:', error);
@@ -90,7 +79,6 @@ router.put('/:id', async (req: Request, res: Response) => {
 
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
-    console.debug(`Deleting the book by id [${req.params.id}]`);
 
     res.status(200).json({
       id: req.params.id,

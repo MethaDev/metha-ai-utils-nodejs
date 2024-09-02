@@ -29,10 +29,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', routes);
 
-app.get('/test', (req, res) => {
-  res.send("test");
-});
-
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.status(404).send();
 });
@@ -41,7 +37,6 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(err.status || 500).send();
 });
 
-console.log("my log test1");
 module.exports.handler = serverless(app);
 // export const handler = serverless(app);
 
