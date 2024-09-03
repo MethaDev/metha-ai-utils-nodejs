@@ -27,6 +27,11 @@ router.get('/', async (req: Request, res: Response) => {
         title: 'Some Title',
         author: 'Some Author',
       },
+      {
+        id: 'ebb3d966-74e4-11ed-8db0-136d663b98e8',
+        title: 'Some Title 2',
+        author: 'Some Author 2',
+      },
     ];
 
     res.status(200).json(books);
