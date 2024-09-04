@@ -14,13 +14,13 @@ router.get('/info', async (req: Request, res: Response) => {
 });
 
 router.get('/data', async (req: Request, res: Response) => {
-  console.log("auth: " + req.headers.Authorization);
+  console.log("user req: " + JSON.stringify(req));
+  console.log("user res: " + JSON.stringify(res));
   try {
     const data = {
       id: 'ebb3d966-74e4-11ed-8db0-136d663b98e7',
       title: 'Some Title',
       author: 'Some Author',
-      auth: req.headers.Authorization
     };
 
     res.status(200).json(data);
