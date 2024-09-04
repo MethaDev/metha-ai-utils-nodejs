@@ -31,7 +31,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.624.0",
-    "@codegenie/serverless-express": "^4.15.0",
     "axios": "^1.6.8",
     "chart.js": "^4.4.1",
     "cookie-parser": "~1.4.4",
