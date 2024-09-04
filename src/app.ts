@@ -45,6 +45,10 @@ module.exports.handler = async (event: any, context: any) => {
   console.log("handler1: " + event.headers.Authorization);
   const result = await handler(event, context);
   console.log("handler2: " + event.headers.Authorization);
+
+  console.log("handler3: " + event.req);
+  console.log("event stringify: " + JSON.stringify(event));
+  console.log("context stringify: " + JSON.stringify(context));
   return result;
 }
 
