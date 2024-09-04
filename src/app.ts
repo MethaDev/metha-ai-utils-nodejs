@@ -1,5 +1,6 @@
 import express from 'express';
-import serverless from "serverless-http";
+// import serverless from "serverless-http";
+import serverlessExpress from '@codegenie/serverless-express';
 import { engine } from 'express-handlebars';
 import cors from "cors";
 import path from "path";
@@ -37,19 +38,47 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(err.status || 500).send();
 });
 
-// module.exports.handler = serverless(app);
+////////////////////////////
+//test
 
-const handler = serverless(app);
+let serverlessExpressInstance: any;
 
-module.exports.handler = async (event: any, context: any, req: any) => {
-  const result = await handler(event, context);
-  console.log("event.headers.Authorization: " + event.headers.Authorization);
-  console.log("event stringify: " + JSON.stringify(event));
-  console.log("context stringify: " + JSON.stringify(context));
-  console.log("req stringify: " + JSON.stringify(req));
-  return result;
+// function asyncTask () {
+//   return new Promise((resolve) => {
+//     setTimeout(() => resolve('connected to database'), 1000)
+//   })
+// }
+
+async function setup (event: any, context: any) {
+  // const asyncValue = await asyncTask()
+  console.log("setup: ");
+  serverlessExpressInstance = serverlessExpress({ app })
+  return serverlessExpressInstance(event, context)
 }
 
+function handler (event: any, context: any) {
+  if (serverlessExpressInstance) return serverlessExpressInstance(event, context)
+
+  return setup(event, context)
+}
+
+module.exports.handler = handler;
+
+////////////////////////////
+
+// module.exports.handler = serverless(app);
+
+// ------------------------------
+// const handler = serverless(app);
+
+// module.exports.handler = async (event: any, context: any) => {
+//   const result = await handler(event, context);
+//   console.log("event.headers.Authorization: " + event.headers.Authorization);
+//   console.log("event stringify: " + JSON.stringify(event));
+//   console.log("context stringify: " + JSON.stringify(context));
+//   return result;
+// }
+// ------------------------------
 
 
 
