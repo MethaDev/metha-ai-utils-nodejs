@@ -37,7 +37,16 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(err.status || 500).send();
 });
 
-module.exports.handler = serverless(app);
+// module.exports.handler = serverless(app);
+
+module.exports.handler = (event: any, context: any, callback: any) => {
+  console.log("handler: " + event.headers.Authorization);
+  console.log("handler req: " + event.req);
+  serverless(app);
+}
+
+
+
 // export const handler = serverless(app);
 
 // const server = awsServerlessExpress.createServer(app);
