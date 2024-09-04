@@ -39,11 +39,15 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 
 // module.exports.handler = serverless(app);
 
-module.exports.handler = (event: any, context: any, callback: any) => {
-  console.log("handler: " + event.headers.Authorization);
-  console.log("handler req: " + event.req);
-  serverless(app);
+const handler = serverless(app);
+
+module.exports.handler = async (event: any, context: any) => {
+  console.log("handler1: " + event.headers.Authorization);
+  const result = await handler(event, context);
+  console.log("handler2: " + event.headers.Authorization);
+  return result;
 }
+
 
 
 
