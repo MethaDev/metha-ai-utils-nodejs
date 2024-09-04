@@ -41,12 +41,12 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 
 const handler = serverless(app);
 
-module.exports.handler = async (event: any, context: any, callback: any) => {
+module.exports.handler = async (event: any, context: any, req: any) => {
   const result = await handler(event, context);
   console.log("event.headers.Authorization: " + event.headers.Authorization);
   console.log("event stringify: " + JSON.stringify(event));
   console.log("context stringify: " + JSON.stringify(context));
-  console.log("callback stringify: " + JSON.stringify(callback));
+  console.log("req stringify: " + JSON.stringify(req));
   return result;
 }
 
