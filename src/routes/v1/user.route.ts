@@ -4,7 +4,7 @@ const router = Router();
 
 router.get('/info', async (req: Request, res: Response) => {
   try {
-    const user = "user";
+    const user = "user info:";
 
     res.status(200).json(user);
   } catch (error) {
