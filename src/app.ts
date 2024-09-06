@@ -1,5 +1,6 @@
 import express from 'express';
-import serverless from "serverless-http";
+// import serverless from "serverless-http";
+import awsServerlessExpress from 'aws-serverless-express';
 import { engine } from 'express-handlebars';
 import cors from "cors";
 import path from "path";
@@ -37,17 +38,29 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(err.status || 500).send();
 });
 
+///////////////
+
+const server = awsServerlessExpress.createServer(app);
+
+module.exports.handler = (event: any, context: any) => {
+  console.log("aws event stringify: " + JSON.stringify(event));
+  console.log("aws context stringify: " + JSON.stringify(context));
+  awsServerlessExpress.proxy(server, event, context);
+}
+
+//////////////
+
 // module.exports.handler = serverless(app);
 
-const handler = serverless(app);
+// const handler = serverless(app);
 
-module.exports.handler = async (event: any, context: any) => {
-  const result = await handler(event, context);
-  console.log("event.headers.Authorization: " + event.headers.Authorization);
-  console.log("event stringify: " + JSON.stringify(event));
-  console.log("context stringify: " + JSON.stringify(context));
-  return result;
-}
+// module.exports.handler = async (event: any, context: any) => {
+//   const result = await handler(event, context);
+//   console.log("event.headers.Authorization: " + event.headers.Authorization);
+//   console.log("event stringify: " + JSON.stringify(event));
+//   console.log("context stringify: " + JSON.stringify(context));
+//   return result;
+// }
 
 
 
