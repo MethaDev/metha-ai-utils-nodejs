@@ -24,7 +24,7 @@ router.get('/info', async (req: any, res: Response) => {
     console.log("user info reqX rawHeaders (25): " + xApigatewayEvent);
     console.log("user info reqX rawHeaders requestContext: " + xApigatewayEvent.requestContext);
     console.log("user info reqX rawHeaders requestContext authorizer: " + xApigatewayEvent.requestContext?.authorizer);
-    console.log("user info reqX rawHeaders requestContext authorizer email: " + xApigatewayEvent.requestContext?.authorizer?.email);
+    console.log("user info reqX rawHeaders requestContext authorizer claims email: " + xApigatewayEvent.requestContext?.authorizer?.claims?.email);
     // x-apigateway-event
 
     const user = "user info:";
