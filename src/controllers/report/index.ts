@@ -57,6 +57,8 @@ export const summarizePDFDownload = asyncHandler(
 
 async function sendMail(file: any, sendTo: string) {
   await initSES();
+  console.log("send mail ses: " + JSON.stringify(ses));
+  console.log("send mail: " + JSON.stringify(transporter));
   try {
     const mailOptions = {
       from: {
