@@ -9,6 +9,7 @@ import hb from "handlebars";
 import { config } from "dotenv";
 import nodemailer from "nodemailer";
 import * as AWSClientSES from "@aws-sdk/client-ses";
+import SESTransport from "nodemailer/lib/ses-transport";
 
 config();
 
@@ -16,21 +17,26 @@ console.log("SES_REGION = " + process.env.SES_REGION);
 console.log("SES_ACCESS_KEY_ID = " + process.env.SES_ACCESS_KEY_ID);
 console.log("SES_SECRET_ACCESS_KEY = " + process.env.SES_SECRET_ACCESS_KEY);
 
-const ses = new AWSClientSES.SES({
-  apiVersion: "2012-10-17",
-  region: process.env.SES_REGION || "us-east-1",
-  credentials: {
-    accessKeyId: process.env.SES_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.SES_SECRET_ACCESS_KEY || "",
-  },
-});
+let ses: AWSClientSES.SES;
+let transporter: nodemailer.Transporter<SESTransport.SentMessageInfo>;
 
-const transporter = nodemailer.createTransport({
-  SES: {
-    ses,
-    aws: AWSClientSES
-  },
-});
+async function initSES() {
+  ses = new AWSClientSES.SES({
+    apiVersion: "2012-10-17",
+    region: process.env.SES_REGION || "us-east-1",
+    credentials: {
+      accessKeyId: process.env.SES_ACCESS_KEY_ID || "",
+      secretAccessKey: process.env.SES_SECRET_ACCESS_KEY || "",
+    },
+  });
+
+  transporter = nodemailer.createTransport({
+    SES: {
+      ses,
+      aws: AWSClientSES
+    },
+  });
+}
 
 export const summarizePDFEMail = asyncHandler(
     async (req: any, res: Response, next: NextFunction) => {
@@ -50,6 +56,7 @@ export const summarizePDFDownload = asyncHandler(
 );
 
 async function sendMail(file: any, sendTo: string) {
+  await initSES();
   try {
     const mailOptions = {
       from: {
