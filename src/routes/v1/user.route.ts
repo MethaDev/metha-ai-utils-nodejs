@@ -18,8 +18,12 @@ router.get('/info', async (req: any, res: Response) => {
     console.log("user info reqX.rawHeaders: " + reqX.rawHeaders);
 
     const index: number = reqX.rawHeaders.lastIndexOf("x-apigateway-event");
+    const xApigatewayEvent:any = decodeURIComponent(reqX.rawHeaders[index + 1])
 
-    console.log("user info reqX rawHeaders (25): " + decodeURIComponent(reqX.rawHeaders[index + 1]));
+    console.log("user info reqX rawHeaders (25): " + xApigatewayEvent);
+    console.log("user info reqX rawHeaders requestContext: " + xApigatewayEvent.requestContext);
+    console.log("user info reqX rawHeaders requestContext authorizer: " + xApigatewayEvent.requestContext?.authorizer);
+    console.log("user info reqX rawHeaders requestContext authorizer email: " + xApigatewayEvent.requestContext?.authorizer?.email);
     // x-apigateway-event
 
     const user = "user info:";
