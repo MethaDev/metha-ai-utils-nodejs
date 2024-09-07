@@ -38,16 +38,22 @@ async function initSES() {
   });
 }
 
-export const summarizePDFEMail = asyncHandler(
+export const reportPDFEMail = asyncHandler(
     async (req: any, res: Response, next: NextFunction) => {
-      res.sendStatus(200);
-      const pdf = await generatePdf();
-      const authorizerEmail: string = req.authorizer?.email;
-      await sendMail(pdf, authorizerEmail);
+      console.log("reportPDFEmail");
+      try {
+        const pdf = await generatePdf();
+        console.log("reportPDFEmail after generate");
+        const authorizerEmail: string = req.authorizer?.email;
+        await sendMail(pdf, authorizerEmail);
+        res.sendStatus(200);
+      } catch(ex) {
+        console.log("reportPDFEmail Error: " + ex);
+      }
     }
 );
 
-export const summarizePDFDownload = asyncHandler(
+export const reportPDFDownload = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
       const pdf = await generatePdf();
       res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length });
@@ -85,10 +91,15 @@ async function sendMail(file: any, sendTo: string) {
   }
 }
 
-export const generateView = asyncHandler(
+export const reportView = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    console.log("generateView");
+    try {
       const html = await generateHTML();
       res.send(html);
+    } catch (ex) {
+      console.log("generateView Error: " + ex);
+    }
   }
 );
 
