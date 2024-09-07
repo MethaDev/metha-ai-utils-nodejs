@@ -16,7 +16,10 @@ router.get('/info', async (req: any, res: Response) => {
   try {
     const reqX: any = req;
     console.log("user info reqX.rawHeaders: " + reqX.rawHeaders);
-    console.log("user info reqX rawHeaders (25): " + decodeURIComponent(reqX.rawHeaders[25]));
+
+    const index: number = reqX.rawHeaders.lastIndexOf("x-apigateway-event");
+
+    console.log("user info reqX rawHeaders (25): " + decodeURIComponent(reqX.rawHeaders[index + 1]));
     // x-apigateway-event
 
     const user = "user info:";
