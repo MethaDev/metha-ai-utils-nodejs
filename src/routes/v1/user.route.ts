@@ -14,6 +14,7 @@ router.get('/helloworld', (req: any, res: any) => {
 
 router.get('/info', async (req: any, res: Response) => {
   try {
+    console.log("user info authorizer: " + req.authorizer?.email);
     const reqX: any = req;
     console.log("user info reqX.rawHeaders: " + reqX.rawHeaders);
     console.log("user info reqX xxx: " + req.xxx);

@@ -33,7 +33,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/api', routes);
 app.use('/api', (req: any, res: any, next: NextFunction) => {
-  req.xxx = "yyy";
+  let authorizer: any;
+  const index: number = req.rawHeaders.lastIndexOf("x-apigateway-event");
+  if (index != -1) {
+    const xApigatewayEventRaw: any = decodeURIComponent(req.rawHeaders[index + 1]);
+    const xApigatewayEvent:any = JSON.parse(xApigatewayEventRaw);
+    authorizer = xApigatewayEvent.requestContext?.authorizer?.claims;
+  }
+  req.authorizer = process.env.AUTHORIZER || authorizer;
   next();
 }, routes);
 
