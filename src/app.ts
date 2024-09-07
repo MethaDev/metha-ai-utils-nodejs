@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction } from 'express';
 // import serverless from "serverless-http";
 import awsServerlessExpress from 'aws-serverless-express';
 import awsServerlessExpressMiddleware from 'aws-serverless-express/middleware';
@@ -31,7 +31,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use(awsServerlessExpressMiddleware.eventContext());
 
-app.use('/api', routes);
+// app.use('/api', routes);
+app.use('/api', (req: any, res: any, next: NextFunction) => {
+  req.xxx = "yyy";
+  next();
+}, routes);
 
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.status(404).send();
