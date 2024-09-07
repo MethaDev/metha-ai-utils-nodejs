@@ -7,8 +7,9 @@ router.get('/info', async (req: Request, res: Response) => {
     const reqX: any = req;
     console.log("user info reqX: path" + JSON.stringify(reqX.path));
     console.log("user info reqX: headers" + JSON.stringify(reqX.headers));
-    console.log("user info reqX requestContext: " + JSON.stringify(reqX.request));
+    console.log("user info reqX request: " + JSON.stringify(reqX.request));
     console.log("user info reqX event: " + JSON.stringify(reqX.event));
+    console.log("user info reqX requestContext: " + JSON.stringify(reqX.requestContext));
     const user = "user info:";
 
     res.status(200).json(user);

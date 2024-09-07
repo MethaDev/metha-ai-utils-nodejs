@@ -1,6 +1,7 @@
 import express from 'express';
 // import serverless from "serverless-http";
 import awsServerlessExpress from 'aws-serverless-express';
+import awsServerlessExpressMiddleware from 'aws-serverless-express/middleware';
 import { engine } from 'express-handlebars';
 import cors from "cors";
 import path from "path";
@@ -37,6 +38,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   next();
 // });
 /////////////////////
+
+app.use(awsServerlessExpressMiddleware.eventContext());
 
 app.use('/api', routes);
 
