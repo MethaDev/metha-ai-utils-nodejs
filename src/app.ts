@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use(awsServerlessExpressMiddleware.eventContext());
 
-app.use('/api', routes);
+// app.use('/api', routes);
 
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.status(404).send();
@@ -48,6 +48,8 @@ const server = awsServerlessExpress.createServer(app);
 module.exports.handler = (event: any, context: any) => {
   console.log("aws event stringify: " + JSON.stringify(event));
   console.log("aws context stringify: " + JSON.stringify(context));
+
+  app.use('/api', routes);
 
   app.use((req: any, res: any, next: any) => {
     req.eventData = event;
