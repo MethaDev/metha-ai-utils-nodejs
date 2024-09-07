@@ -49,6 +49,11 @@ module.exports.handler = (event: any, context: any) => {
   console.log("aws event stringify: " + JSON.stringify(event));
   console.log("aws context stringify: " + JSON.stringify(context));
 
+  app.use((req: any, res: any, next: any) => {
+    req.eventData = event;
+    next();
+  });
+
   const modifiedEvent = {
     xxx: "xxx temp data"
   };
