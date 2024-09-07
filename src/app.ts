@@ -74,7 +74,7 @@ app.get('/helloworld', (req: any, res: any) => {
     console.log("=========================================================================")
     console.log("Hello World Route Event payload: ", req); // Logs the full event payload
     console.log("=========================================================================")
-    console.log("xxx my raw event" + req.rawHeaders)
+    console.log("xxx my raw event" + JSON.stringify(req.rawHeaders))
     res.json({ "Route": "Called from Hello World route" });
 });
 
