@@ -28,6 +28,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 //////////////////////
 
+/////////////////////
+// Middleware to extract data from Lambda event if necessary
+// app.use((req, res, next) => {
+//   if (req.lambdaEvent) {
+//     req.lambdaData = req.lambdaEvent; // Attach event data to req
+//   }
+//   next();
+// });
+/////////////////////
+
 app.use('/api', routes);
 
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -45,6 +55,17 @@ const server = awsServerlessExpress.createServer(app);
 module.exports.handler = (event: any, context: any) => {
   console.log("aws event stringify: " + JSON.stringify(event));
   console.log("aws context stringify: " + JSON.stringify(context));
+
+  const modifiedEvent = {
+    xxx: "xxx temp data"
+  };
+
+  event.request = {
+    lambdaEvent: modifiedEvent
+  };
+
+  console.log("aws event request stringify: " + JSON.stringify(event.request));
+
   awsServerlessExpress.proxy(server, event, context);
 }
 
