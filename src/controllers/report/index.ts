@@ -33,10 +33,11 @@ const transporter = nodemailer.createTransport({
 });
 
 export const summarizePDFEMail = asyncHandler(
-    async (req: Request, res: Response, next: NextFunction) => {
+    async (req: any, res: Response, next: NextFunction) => {
       res.send(200);
       const pdf = await generatePdf();
-      await sendMail(pdf, "elad.y@metha.ai");
+      const authorizerEmail: string = req.authorizer?.email;
+      await sendMail(pdf, authorizerEmail);
     }
 );
 

@@ -1,4 +1,4 @@
-import express, { NextFunction } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 // import serverless from "serverless-http";
 import awsServerlessExpress from 'aws-serverless-express';
 import awsServerlessExpressMiddleware from 'aws-serverless-express/middleware';
@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(awsServerlessExpressMiddleware.eventContext());
 
 // app.use('/api', routes);
-app.use('/api', (req: any, res: any, next: NextFunction) => {
+app.use('/api', (req: any, res: Response, next: NextFunction) => {
   let authorizer: any;
   const index: number = req.rawHeaders.lastIndexOf("x-apigateway-event");
   if (index != -1) {
@@ -61,52 +61,3 @@ module.exports.handler = (event: any, context: any) => {
 }
 
 export default app;
-
-// --------------------------------------
-
-// Import necessary modules
-// const awsServerlessExpress = require('aws-serverless-express');
-// const express = require('express');
-// const app = express();
-
-// // Middleware to parse JSON bodies
-// app.use(express.json());
-
-// // /hello route
-// app.get('/helloworld', (req: any, res: any) => {
-//     console.log("=========================================================================")
-//     console.log("Hello World Route Event payload: ", req); // Logs the full event payload
-//     console.log("=========================================================================")
-//     // console.log("xxx my raw event" + JSON.stringify(req.rawHeaders))
-//     console.log("xxx my raw event" + decodeURIComponent(req.rawHeaders[25]));
-    
-//     res.json({ "Route": "Called from Hello World route" });
-// });
-
-// // /bye route
-// app.get('/healthcheck', (req: any, res: any) => {
-//     console.log("=========================================================================")
-//     console.log("Health Check Route Event payload: ", req); // Logs the full event payload
-//     console.log("=========================================================================")
-//     res.json({ "Route": "Called from Health Check route" });
-// });
-
-// // /test route
-// app.get('/test', (req: any, res: any) => {
-//     console.log("=========================================================================")
-//     console.log("Test Route Event payload: ", req); // Logs the full event payload
-//     console.log("=========================================================================")
-//     res.json({ "Route": "Called from Test route" });
-// });
-
-// // Create the server
-// const server = awsServerlessExpress.createServer(app);
-
-// // Lambda handler
-// exports.handler = (event: any, context: any) => {
-//     console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-//     console.log("Original Lambda event: ", JSON.stringify(event, null, 2)); // Log the full event from API Gateway
-//     console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-//     awsServerlessExpress.proxy(server, event, context);
-// };
-
