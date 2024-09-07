@@ -30,13 +30,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 //////////////////////
 
 /////////////////////
-// Middleware to extract data from Lambda event if necessary
-// app.use((req, res, next) => {
-//   if (req.lambdaEvent) {
-//     req.lambdaData = req.lambdaEvent; // Attach event data to req
-//   }
-//   next();
-// });
+app.use((req: any, res: any, next: any) => {
+  if (req.lambdaEvent) {
+    req.lambdaData = req.lambdaEvent; // Attach event data to req
+  }
+  next();
+});
+
+const awsServerlessExpressMiddleware2 = (req: any, res: any, next: any) => {
+  req.lambdaEvent = req.event.request.lambdaEvent;
+  next();
+};
+// Add this middleware to your Express app
+app.use(awsServerlessExpressMiddleware2);
 /////////////////////
 
 app.use(awsServerlessExpressMiddleware.eventContext());
@@ -66,8 +72,6 @@ module.exports.handler = (event: any, context: any) => {
   event.request = {
     lambdaEvent: modifiedEvent
   };
-
-  console.log("aws event request stringify: " + JSON.stringify(event.request));
 
   awsServerlessExpress.proxy(server, event, context);
 }

@@ -10,6 +10,8 @@ router.get('/info', async (req: Request, res: Response) => {
     console.log("user info reqX request: " + JSON.stringify(reqX.request));
     console.log("user info reqX event: " + JSON.stringify(reqX.event));
     console.log("user info reqX requestContext: " + JSON.stringify(reqX.requestContext));
+
+    console.log("user reqX.lambdaData: " + JSON.stringify(reqX.lambdaData));
     const user = "user info:";
 
     res.status(200).json(user);
