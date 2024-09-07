@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 
 const router = Router();
 
-router.get('/info', async (req: Request, res: Response) => {
+router.get('/info', async (req: any, res: Response) => {
   try {
     const reqX: any = req;
     console.log("user info reqX: path" + JSON.stringify(reqX.path));
