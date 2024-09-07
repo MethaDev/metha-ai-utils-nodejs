@@ -15,8 +15,8 @@ router.get('/helloworld', (req: any, res: any) => {
 router.get('/info', async (req: any, res: Response) => {
   try {
     const reqX: any = req;
-    console.log("user info reqX: " + reqX);
     console.log("user info reqX.rawHeaders: " + reqX.rawHeaders);
+    console.log("user info reqX rawHeaders (25): " + decodeURIComponent(reqX.rawHeaders[25]));
     // x-apigateway-event
 
     const user = "user info:";
