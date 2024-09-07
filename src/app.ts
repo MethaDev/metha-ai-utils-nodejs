@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use(awsServerlessExpressMiddleware.eventContext());
 
-// app.use('/api', routes);
+app.use('/api', routes);
 
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.status(404).send();
@@ -39,6 +39,14 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
 
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.status(err.status || 500).send();
+});
+
+// /hello route
+app.get('/helloworld', (req, res) => {
+  console.log("=========================================================================")
+  console.log("Hello World Route Event payload: ", req); // Logs the full event payload
+  console.log("=========================================================================")
+  res.json({ "Route": "Called from Hello World route" });
 });
 
 ///////////////
@@ -49,20 +57,13 @@ module.exports.handler = (event: any, context: any) => {
   console.log("aws event stringify: " + JSON.stringify(event));
   console.log("aws context stringify: " + JSON.stringify(context));
 
-  app.use('/api', routes);
+  // const modifiedEvent = {
+  //   xxx: "xxx temp data"
+  // };
 
-  app.use((req: any, res: any, next: any) => {
-    req.eventData = event;
-    next();
-  });
-
-  const modifiedEvent = {
-    xxx: "xxx temp data"
-  };
-
-  event.request = {
-    lambdaEvent: modifiedEvent
-  };
+  // event.request = {
+  //   lambdaEvent: modifiedEvent
+  // };
 
   awsServerlessExpress.proxy(server, event, context);
 }
