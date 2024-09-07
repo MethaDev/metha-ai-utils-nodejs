@@ -40,7 +40,7 @@ async function initSES() {
 
 export const summarizePDFEMail = asyncHandler(
     async (req: any, res: Response, next: NextFunction) => {
-      res.send(200);
+      res.sendStatus(200);
       const pdf = await generatePdf();
       const authorizerEmail: string = req.authorizer?.email;
       await sendMail(pdf, authorizerEmail);
