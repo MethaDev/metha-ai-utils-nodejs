@@ -31,18 +31,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use(awsServerlessExpressMiddleware.eventContext());
 
-// app.use('/api', routes);
-app.use('/api', (req: any, res: Response, next: NextFunction) => {
-  let authorizer: any;
-  const index: number = req.rawHeaders.lastIndexOf("x-apigateway-event");
-  if (index != -1) {
-    const xApigatewayEventRaw: any = decodeURIComponent(req.rawHeaders[index + 1]);
-    const xApigatewayEvent:any = JSON.parse(xApigatewayEventRaw);
-    authorizer = xApigatewayEvent.requestContext?.authorizer?.claims;
-  }
-  req.authorizer = process.env.AUTHORIZER || authorizer;
-  next();
-}, routes);
+app.use('/api', routes);
+// app.use('/api', (req: any, res: Response, next: NextFunction) => {
+//   let authorizer: any;
+//   const index: number = req.rawHeaders.lastIndexOf("x-apigateway-event");
+//   if (index != -1) {
+//     const xApigatewayEventRaw: any = decodeURIComponent(req.rawHeaders[index + 1]);
+//     const xApigatewayEvent:any = JSON.parse(xApigatewayEventRaw);
+//     authorizer = xApigatewayEvent.requestContext?.authorizer?.claims;
+//   }
+//   req.authorizer = process.env.AUTHORIZER || authorizer;
+//   next();
+// }, routes);
 
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.status(404).send();
