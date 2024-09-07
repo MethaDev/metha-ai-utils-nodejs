@@ -4,6 +4,7 @@ const router = Router();
 
 router.get('/info', async (req: Request, res: Response) => {
   try {
+    console.log("user info req: " + JSON.stringify(req));
     const user = "user info:";
 
     res.status(200).json(user);
