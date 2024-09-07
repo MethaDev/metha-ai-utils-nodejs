@@ -29,23 +29,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 //////////////////////
 
-/////////////////////
-app.use((req: any, res: any, next: any) => {
-  if (req.lambdaEvent) {
-    req.lambdaData = req.lambdaEvent; // Attach event data to req
-  }
-  next();
-});
-
-const awsServerlessExpressMiddleware2 = (req: any, res: any, next: any) => {
-  req.lambdaEvent = req.event.request.lambdaEvent;
-  next();
-};
-// Add this middleware to your Express app
-app.use(awsServerlessExpressMiddleware2);
-/////////////////////
-
-app.use(awsServerlessExpressMiddleware.eventContext());
+// app.use(awsServerlessExpressMiddleware.eventContext());
 
 app.use('/api', routes);
 
@@ -76,47 +60,4 @@ module.exports.handler = (event: any, context: any) => {
   awsServerlessExpress.proxy(server, event, context);
 }
 
-//////////////
-
-// module.exports.handler = serverless(app);
-
-// const handler = serverless(app);
-
-// module.exports.handler = async (event: any, context: any) => {
-//   const result = await handler(event, context);
-//   console.log("event.headers.Authorization: " + event.headers.Authorization);
-//   console.log("event stringify: " + JSON.stringify(event));
-//   console.log("context stringify: " + JSON.stringify(context));
-//   return result;
-// }
-
-
-
-
-// export const handler = serverless(app);
-
-// const server = awsServerlessExpress.createServer(app);
-
-// exports.handler = (event, context) => {
-//   awsServerlessExpress.proxy(server, event, context);
-// };
-
-// export const handler = serverless(app);
-// export async function handler(event: any) {
-//   // Convert the event object to a JSON string
-//   const eventString = JSON.stringify(event, null, 2);
-  
-//   // Log the event to CloudWatch
-//   console.log("Received event:", eventString);
-
-//   // Return the event in the response body
-//   return {
-//       statusCode: 200,
-//       headers: {
-//           "Content-Type": "application/json"
-//       },
-//       // Include the event in the response body
-//       body: JSON.stringify({ message: "Event received", event: JSON.parse(eventString) })
-//   };
-// }
 export default app;
