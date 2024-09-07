@@ -63,8 +63,7 @@ export const reportPDFDownload = asyncHandler(
 
 async function sendMail(file: any, sendTo: string) {
   await initSES();
-  console.log("send mail ses: " + JSON.stringify(ses));
-  console.log("send mail: " + JSON.stringify(transporter));
+  console.log("send mail ses sendTo " + sendTo);
   try {
     const mailOptions = {
       from: {
