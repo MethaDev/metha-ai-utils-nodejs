@@ -8,6 +8,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 ///////////////////
+// npm i chrome-aws-lambda
 
 import routes from './routes';
 
