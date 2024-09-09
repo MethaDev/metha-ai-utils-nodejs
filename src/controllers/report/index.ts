@@ -126,7 +126,6 @@ export async function generatePdf(): Promise<any> {
     defaultViewport: chromium.defaultViewport,
     executablePath: await chromium.executablePath(),
     headless: chromium.headless,
-    ignoreDefaultArgs: [],
     ignoreHTTPSErrors: true,
   });
 
