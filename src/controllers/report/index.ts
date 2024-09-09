@@ -1,10 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../../middleware/async";
 // import { ErrorResponse } from "../../middleware/error";
-// import puppeteer from "puppeteer";
-// import chromium from "chrome-aws-lambda";
-import chromium from "@sparticuz/chromium";
-import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
 import fs from "fs";
 import path from "path";
 import utils from "util"
@@ -117,53 +114,23 @@ async function getTemplateHtml() {
 }
 
 export async function generatePdf(): Promise<any> {
-  const htmlTemplate = await generateHTML();
-  // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
-  // we are using headless mode
-  console.log("generatePdf: befor puppeteer");
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(),
-    headless: chromium.headless,
-    ignoreHTTPSErrors: true,
-  });
-
-  console.log('Browser launched');
-  console.log("generatePdf: befor browser newPage");
-  const page = await browser.newPage();
-  // We set the page content as the generated html by handlebars
-  console.log("generatePdf: befor setContent");
-  await page.setContent(htmlTemplate, {waitUntil: 'networkidle0'});
-  // We use pdf function to generate the pdf in the same folder as this file.
-  console.log("generatePdf: befor page.pdf");
-  // const generatedPdf = await page.pdf({ format: 'A4' });
-  const generatedPdf = await page.pdf({
-    format: "a4"
-  });
-  await browser.close();
-  console.log("PDF Generated");
-  return generatedPdf;
+    const htmlTemplate = await generateHTML();
+    // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
+    // we are using headless mode
+    console.log("generatePdf: befor puppeteer");
+    const browser = await puppeteer.launch();
+    console.log("generatePdf: befor browser newPage");
+    const page = await browser.newPage();
+    // We set the page content as the generated html by handlebars
+    console.log("generatePdf: befor setContent");
+    await page.setContent(htmlTemplate, {waitUntil: 'networkidle0'});
+    // We use pdf function to generate the pdf in the same folder as this file.
+    console.log("generatePdf: befor page.pdf");
+    const generatedPdf = await page.pdf({ format: 'A4' });
+    await browser.close();
+    console.log("PDF Generated");
+    return generatedPdf;
 }
-
-// export async function generatePdf(): Promise<any> {
-//     const htmlTemplate = await generateHTML();
-//     // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
-//     // we are using headless mode
-//     console.log("generatePdf: befor puppeteer");
-//     const browser = await puppeteer.launch();
-//     console.log("generatePdf: befor browser newPage");
-//     const page = await browser.newPage();
-//     // We set the page content as the generated html by handlebars
-//     console.log("generatePdf: befor setContent");
-//     await page.setContent(htmlTemplate, {waitUntil: 'networkidle0'});
-//     // We use pdf function to generate the pdf in the same folder as this file.
-//     console.log("generatePdf: befor page.pdf");
-//     const generatedPdf = await page.pdf({ format: 'A4' });
-//     await browser.close();
-//     console.log("PDF Generated");
-//     return generatedPdf;
-// }
 
 export async function generateHTML(): Promise<any> {
   const data = {
