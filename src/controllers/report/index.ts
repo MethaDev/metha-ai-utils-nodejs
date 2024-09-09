@@ -46,6 +46,7 @@ export const reportPDFEMail = asyncHandler(
         console.log("reportPDFEmail after generate");
         const authorizerEmail: string = req.authorizer?.email;
         await sendMail(pdf, authorizerEmail);
+        console.log("reportPDFEmail after send mail");
         res.sendStatus(200);
       } catch(ex) {
         console.log("reportPDFEmail Error: " + ex);
