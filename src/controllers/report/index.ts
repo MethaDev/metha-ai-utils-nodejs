@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../../middleware/async";
 // import { ErrorResponse } from "../../middleware/error";
-import puppeteer from "puppeteer";
-import chromium from "chrome-aws-lambda";
+// import puppeteer from "puppeteer";
+// import chromium from "chrome-aws-lambda";
+import chromium from "@sparticuz/chromium";
+import puppeteer from "puppeteer-core";
 import fs from "fs";
 import path from "path";
 import utils from "util"
@@ -119,11 +121,16 @@ export async function generatePdf(): Promise<any> {
   // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
   // we are using headless mode
   console.log("generatePdf: befor puppeteer");
-  const browser = await chromium.puppeteer.launch({
-    executablePath: await chromium.executablePath,
+  const browser = await puppeteer.launch({
     args: chromium.args,
-    headless: true
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(),
+    headless: chromium.headless,
+    ignoreDefaultArgs: [],
+    ignoreHTTPSErrors: true,
   });
+
+  console.log('Browser launched');
   console.log("generatePdf: befor browser newPage");
   const page = await browser.newPage();
   // We set the page content as the generated html by handlebars
