@@ -41,7 +41,7 @@ app.use('/api', (req: any, res: Response, next: NextFunction) => {
     const xApigatewayEvent:any = JSON.parse(xApigatewayEventRaw);
     authorizer = xApigatewayEvent.requestContext?.authorizer?.claims;
   }
-  req.authorizer = process.env.AUTHORIZER || authorizer;
+  req.authorizer = authorizer || { email: process.env.AUTHORIZER_EMAIL };
   next();
 }, routes);
 
