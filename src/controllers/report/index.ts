@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../../middleware/async";
 // import { ErrorResponse } from "../../middleware/error";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import fs from "fs";
 import path from "path";
 import utils from "util"
@@ -12,6 +12,7 @@ import * as AWSClientSES from "@aws-sdk/client-ses";
 import SESTransport from "nodemailer/lib/ses-transport";
 
 config();
+// chromium.setGraphicsMode = true;
 
 console.log("SES_REGION = " + process.env.SES_REGION);
 console.log("SES_ACCESS_KEY_ID = " + process.env.SES_ACCESS_KEY_ID);
