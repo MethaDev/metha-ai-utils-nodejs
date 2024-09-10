@@ -15,7 +15,9 @@ phases:
       - echo "Zipping deployment package..."
       - zip -r9 ../deployment_package.zip .
       - cd ..
-      - aws lambda update-function-code --function-name metha-ai-utils-nodejs --zip-file fileb://deployment_package.zip
+      - aws s3 cp deployment_package.zip s3://metha-ai-utils-nodejs-bucket/metha-ai-utils-nodejs.zip
+      - aws lambda update-function-code --function-name metha-ai-utils-nodejs --s3-bucket metha-ai-utils-nodejs-bucket --s3-key metha-ai-utils-nodejs.zip
+      # - aws lambda update-function-code --function-name metha-ai-utils-nodejs --zip-file fileb://deployment_package.zip
 
   post_build:
     commands:
