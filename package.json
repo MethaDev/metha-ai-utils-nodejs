@@ -34,7 +34,6 @@
     "aws-serverless-express": "^3.4.0",
     "axios": "^1.6.8",
     "chart.js": "^4.4.1",
-    "chrome-aws-lambda": "^10.1.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "express": "^4.18.2",
