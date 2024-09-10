@@ -124,7 +124,11 @@ export async function generatePdf(): Promise<any> {
     // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
     // we are using headless mode
     console.log("generatePdf: befor puppeteer.launch");
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({
+      headless: true,
+      executablePath: process.env.IS_Local ? undefined : `/usr/bin/google-chrome`,
+      args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
+    })
     console.log("generatePdf: befor browser newPage");
     const page = await browser.newPage();
     // We set the page content as the generated html by handlebars
@@ -140,6 +144,33 @@ export async function generatePdf(): Promise<any> {
   }
   return result;
 }
+
+// export async function generatePdf(): Promise<any> {
+//   console.log("generatePdf: begin");
+//   let result: any = null;
+//   let browser: any = null;
+//   try {
+//     console.log("generatePdf: before generateHTML");
+//     const htmlTemplate = await generateHTML();
+//     // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
+//     // we are using headless mode
+//     console.log("generatePdf: befor puppeteer.launch");
+//     browser = await puppeteer.launch();
+//     console.log("generatePdf: befor browser newPage");
+//     const page = await browser.newPage();
+//     // We set the page content as the generated html by handlebars
+//     console.log("generatePdf: befor setContent");
+//     await page.setContent(htmlTemplate, {waitUntil: 'networkidle0'});
+//     // We use pdf function to generate the pdf in the same folder as this file.
+//     console.log("generatePdf: befor page.pdf");
+//     result = await page.pdf({ format: 'A4' });
+//     await browser.close();
+//     console.log("PDF Generated");
+//   } catch (ex) {
+//     console.log("generatePdf Error: " + ex);
+//   }
+//   return result;
+// }
 
 export async function generateHTML(): Promise<any> {
   const data = {
