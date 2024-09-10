@@ -141,6 +141,7 @@ export async function generatePdf(): Promise<any> {
     console.log("PDF Generated");
   } catch (ex) {
     console.log("generatePdf Error: " + ex);
+    throw new Error(JSON.stringify(ex));
   }
   return result;
 }
