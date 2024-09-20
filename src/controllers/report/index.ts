@@ -142,7 +142,7 @@ export async function generatePdf(): Promise<any> {
     console.log("generatePdf: before setContent");
     // await page.setContent(htmlTemplate, {waitUntil: 'networkidle0'});
     const htmlTest ="<html><body><h2>Hello</h2></body></html>";
-    await page.setContent(htmlTest, {
+    await page.setContent(htmlTemplate, {
       waitUntil: ['domcontentloaded', 'networkidle0', 'load'],
     });
     // We use pdf function to generate the pdf in the same folder as this file.
