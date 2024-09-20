@@ -6,7 +6,7 @@ phases:
       nodejs: 18  # Specify the Node.js version you're using
     commands:
       - echo Installing dependencies...
-      - npm install --legacy-peer-deps
+      - npm install
 
   build:
     commands:

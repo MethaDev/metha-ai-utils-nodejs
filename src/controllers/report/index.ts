@@ -132,7 +132,7 @@ export async function generatePdf(): Promise<any> {
       defaultViewport: chromium.defaultViewport,
       executablePath: process.env.IS_LOCAL
         ? puppeteer.executablePath()
-        : await chromium.executablePath(),
+        : await chromium.executablePath('/opt/nodejs/node_modules/@sparticuz/chromium/bin'),
       headless: chromium.headless,
       ignoreHTTPSErrors: true,
     });
