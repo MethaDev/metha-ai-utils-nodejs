@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../../middleware/async";
 // import { ErrorResponse } from "../../middleware/error";
-import puppeteer from "puppeteer-core";
 import fs from "fs";
 import path from "path";
 import utils from "util"
 import hb from "handlebars";
 import { config } from "dotenv";
+import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
 import nodemailer from "nodemailer";
 import * as AWSClientSES from "@aws-sdk/client-ses";
 import SESTransport from "nodemailer/lib/ses-transport";
@@ -126,10 +127,27 @@ export async function generatePdf(): Promise<any> {
     // we are using headless mode
     console.log("generatePdf: befor puppeteer.launch");
     browser = await puppeteer.launch({
+      args: process.env.IS_LOCAL ? puppeteer.defaultArgs() : chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: process.env.IS_LOCAL
+        ? "/tmp/localChromium/chromium/linux-1122391/chrome-linux/chrome"
+        : await chromium.executablePath(),
       headless: true,
-      executablePath: process.env.IS_Local ? undefined : `/usr/bin/google-chrome`,
-      args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`],
-    })
+      ignoreHTTPSErrors: true,
+    });
+    // browser = await puppeteer.launch({
+    //   args: chromium.args,
+    //   defaultViewport: chromium.defaultViewport,
+    //   executablePath: await chromium.executablePath(),
+    //   headless: chromium.headless,
+    // });
+    // browser = await puppeteer.launch({
+    //   args: chromium.args,
+    //   defaultViewport: chromium.defaultViewport,
+    //   executablePath: await chromium.executablePath(),
+    //   headless: chromium.headless,
+    //   ignoreHTTPSErrors: true,
+    // })
     console.log("generatePdf: befor browser newPage");
     const page = await browser.newPage();
     // We set the page content as the generated html by handlebars
