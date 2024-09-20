@@ -141,10 +141,11 @@ export async function generatePdf(): Promise<any> {
     // We set the page content as the generated html by handlebars
     console.log("generatePdf: before setContent");
     // await page.setContent(htmlTemplate, {waitUntil: 'networkidle0'});
-    const htmlTest ="<html><body><h2>Hello</h2></body></html>";
-    await page.setContent(htmlTemplate, {
-      waitUntil: ['domcontentloaded', 'networkidle0', 'load'],
-    });
+    await page.setContent(htmlTemplate, {waitUntil: 'networkidle0', timout: 60000});
+    // const htmlTest ="<html><body><h2>Hello</h2></body></html>";
+    // await page.setContent(htmlTemplate, {
+    //   waitUntil: ['domcontentloaded', 'networkidle0', 'load'],
+    // });
     // We use pdf function to generate the pdf in the same folder as this file.
     console.log("generatePdf: before page.pdf");
     result = await page.pdf({ format: 'A4' });
