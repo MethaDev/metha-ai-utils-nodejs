@@ -129,15 +129,15 @@ export async function generatePdf(): Promise<any> {
     // we are using headless mode
     console.log("generatePdf: before puppeteer.launch");
     if (process.env.IS_LOCAL) {
-      browser = await puppeteerCore.launch({
-        args: process.env.IS_LOCAL ?  ['--no-sandbox'] : chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: process.env.IS_LOCAL
-          ? puppeteer.executablePath()
-          : await chromium.executablePath(),
-        headless: false,
-        ignoreHTTPSErrors: true,
-      });
+      // browser = await puppeteerCore.launch({
+      //   args: process.env.IS_LOCAL ?  ['--no-sandbox'] : chromium.args,
+      //   defaultViewport: chromium.defaultViewport,
+      //   executablePath: process.env.IS_LOCAL
+      //     ? puppeteer.executablePath()
+      //     : await chromium.executablePath(),
+      //   headless: false,
+      //   ignoreHTTPSErrors: true,
+      // });
     } else {
       browser = await chromeAWSLambda.puppeteer.launch({
         args: chromeAWSLambda.args,
@@ -244,7 +244,7 @@ export const generateTemplateOld = asyncHandler(
           // await page.goto('https://blog.risingstack.com', {waitUntil: 'networkidle0'});
           //   await page.goto('https://textologia.net/?p=16379', {waitUntil: 'networkidle0'});
           await page.goto('http://metha.ai', { waitUntil: 'networkidle0' });
-          const pdf = await page.pdf({ format: 'A4' });
+          const pdf = await page.pdf({ format: 'a4' });
 
           await browser.close();
           return pdf
