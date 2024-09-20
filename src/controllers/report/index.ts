@@ -9,6 +9,7 @@ import { config } from "dotenv";
 import puppeteerCore from "puppeteer-core";
 import puppeteer from "puppeteer";
 import chromium from "@sparticuz/chromium";
+import chromeAWSLambda from "chrome-aws-lambda";
 import nodemailer from "nodemailer";
 import * as AWSClientSES from "@aws-sdk/client-ses";
 import SESTransport from "nodemailer/lib/ses-transport";
@@ -127,15 +128,26 @@ export async function generatePdf(): Promise<any> {
     // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
     // we are using headless mode
     console.log("generatePdf: before puppeteer.launch");
-    browser = await puppeteerCore.launch({
-      args: process.env.IS_LOCAL ?  ['--no-sandbox'] : chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: process.env.IS_LOCAL
-        ? puppeteer.executablePath()
-        : await chromium.executablePath(),
-      headless: false,
-      ignoreHTTPSErrors: true,
-    });
+    if (process.env.IS_LOCAL) {
+      browser = await puppeteerCore.launch({
+        args: process.env.IS_LOCAL ?  ['--no-sandbox'] : chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: process.env.IS_LOCAL
+          ? puppeteer.executablePath()
+          : await chromium.executablePath(),
+        headless: false,
+        ignoreHTTPSErrors: true,
+      });
+    } else {
+      browser = await chromeAWSLambda.puppeteer.launch({
+        args: chromeAWSLambda.args,
+        defaultViewport: chromeAWSLambda.defaultViewport,
+        executablePath: await chromeAWSLambda.executablePath,
+        headless: chromeAWSLambda.headless,
+        ignoreHTTPSErrors: true,
+      });
+    }
+    
     // browser = await puppeteer.launch({
     //   args: process.env.IS_LOCAL ? puppeteer.defaultArgs() : chromium.args,
     //   defaultViewport: chromium.defaultViewport,
