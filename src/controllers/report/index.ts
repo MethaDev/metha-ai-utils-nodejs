@@ -127,12 +127,12 @@ export async function generatePdf(): Promise<any> {
     // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
     // we are using headless mode
     console.log("generatePdf: before puppeteer.launch");
-    browser = await puppeteerCore.launch({
+    browser = await puppeteer.launch({
       args: process.env.IS_LOCAL ?  ['--no-sandbox'] : chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: process.env.IS_LOCAL
         ? puppeteer.executablePath()
-        : await chromium.executablePath('/opt/nodejs/node_modules/@sparticuz/chromium/bin'),
+        : await chromium.executablePath(),
       headless: chromium.headless,
       ignoreHTTPSErrors: true,
     });
