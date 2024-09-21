@@ -54,11 +54,18 @@ export const reportPDFEMail = asyncHandler(
         const pdf = await generatePdf();
         console.log("reportPDFEmail after generate");
         const authorizerEmail: string = req.authorizer?.email;
+        if (!authorizerEmail) {
+          throw new Error("No authorization email");
+        }
+        if (!pdf) {
+          throw new Error("PDF generate failed");
+        }
         await sendMail(pdf, authorizerEmail);
         console.log("reportPDFEmail after send mail");
         res.sendStatus(200);
       } catch(ex) {
         console.log("reportPDFEmail Error: " + ex);
+        res.sendStatus(400);
       }
     }
 );
@@ -81,7 +88,6 @@ async function sendMail(file: any, sendTo: string) {
         address: "elad.y@metha.ai"
       },
       to: sendTo,
-      // to: "lior.m@metha.ai",
       subject: "Your report is ready - Test",
       text: "Your report is ready",
       html: "<h1>Your report is ready</h1>",
@@ -134,13 +140,10 @@ export async function generatePdf(): Promise<any> {
     // we are using headless mode
     console.log("generatePdf: before puppeteer.launch");
     browser = await puppeteerCore.launch({
-      // args: process.env.IS_LOCAL ? puppeteer.defaultArgs() : chromium.args,
-      // args: process.env.IS_LOCAL ? [...chromium.args] : [...chromium.args], //, '--no-sandbox', '--disable-setuid-sandbox'] : [...chromium.args],
-      // args: process.env.IS_LOCAL ? [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'] : chromium.args,
       args: process.env.IS_LOCAL ? puppeteerCore.defaultArgs() : chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: process.env.IS_LOCAL ?
-        await puppeteerCore.executablePath('chrome') //"C:\\Users\\elady\\AppData\\Local\\Temp\\chromium\\chromium\\win64-1358523\\chrome-win") //? await chromium.executablePath("C:\\Users\\elady\\AppData\\Local\\Temp\\chromium")
+        await puppeteerCore.executablePath('chrome')
         : await chromium.executablePath(),
       headless: process.env.IS_LOCAL ? false : chromium.headless,
     });
@@ -148,7 +151,6 @@ export async function generatePdf(): Promise<any> {
     const page = await browser.newPage();
     // We set the page content as the generated html by handlebars
     console.log("generatePdf: before setContent");
-    const htmlTest ="<html><body><h2>Hello</h2></body></html>";
     await page.setContent(htmlTemplate, { waitUntil: ['load', 'domcontentloaded', 'networkidle0'] });
     await page.evaluate('window.scrollTo(0, document.body.scrollHeight)');
     // We use pdf function to generate the pdf in the same folder as this file.
@@ -163,179 +165,6 @@ export async function generatePdf(): Promise<any> {
   return result;
 }
 
-export async function generatePdfold3(): Promise<any> {
-  console.log("generatePdf: begin");
-  let result: any = null;
-  let browser: any = null;
-  try {
-    console.log("generatePdf: before generateHTML");
-    const htmlTemplate = await generateHTML();
-    // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
-    // we are using headless mode
-    console.log("generatePdf: before puppeteer.launch");
-    browser = await puppeteerCore.launch({
-      args: process.env.IS_LOCAL ? puppeteer.defaultArgs() : chromium.args,
-      // args: process.env.IS_LOCAL ? [...chromium.args] : [...chromium.args], //, '--no-sandbox', '--disable-setuid-sandbox'] : [...chromium.args],
-      defaultViewport: chromium.defaultViewport,
-      executablePath: process.env.IS_LOCAL ?
-        await puppeteer.executablePath() //"C:\\Users\\elady\\AppData\\Local\\Temp\\chromium\\chromium\\win64-1358523\\chrome-win") //? await chromium.executablePath("C:\\Users\\elady\\AppData\\Local\\Temp\\chromium")
-        : await chromium.executablePath(),
-      headless: process.env.IS_LOCAL ? false : chromium.headless,
-    });
-    console.log("generatePdf: before browser newPage");
-    const page = await browser.newPage();
-    // We set the page content as the generated html by handlebars
-    console.log("generatePdf: before setContent");
-    // await page.setContent(htmlTemplate, {waitUntil: 'networkidle0'});
-    // await page.setContent(htmlTemplate, {waitUntil: ['networkidle0', 'domcontentloaded']});
-    const htmlTest ="<html><body><h2>Hello</h2></body></html>";
-    // await page.setContent(htmlTest, {
-    //   waitUntil: ['domcontentloaded', 'networkidle0', 'load'],
-    // })
-    await page.setContent(htmlTest, { waitUntil: ['load', 'domcontentloaded', 'networkidle0'] });
-    await page.evaluate('window.scrollTo(0, document.body.scrollHeight)');
-    // const htmlTest ="<html><body><h2>Hello</h2></body></html>";
-    // await page.setContent(htmlTemplate, {
-    //   waitUntil: ['domcontentloaded', 'networkidle0', 'load'],
-    // });
-    // We use pdf function to generate the pdf in the same folder as this file.
-    console.log("generatePdf: before page.pdf");
-    result = await page.pdf({ format: 'A4' });
-    await browser.close();
-    console.log("PDF Generated");
-  } catch (ex) {
-    console.log("generatePdf Error: " + ex);
-    throw new Error(JSON.stringify(ex));
-  }
-  return result;
-}
-
-export async function generatePdfOld2(): Promise<any> {
-  console.log("generatePdf: begin");
-  let result: any = null;
-  let browser: any = null;
-  try {
-    console.log("generatePdf: before generateHTML");
-    const htmlTemplate = await generateHTML();
-    // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
-    // we are using headless mode
-    console.log("generatePdf: before puppeteer.launch");
-    browser = await puppeteerCore.launch({
-      args: process.env.IS_LOCAL ?  ['--no-sandbox'] : chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: process.env.IS_LOCAL
-        ? puppeteer.executablePath()
-        : await chromium.executablePath(),
-      headless: chromium.headless,
-      // ignoreHTTPSErrors: true,
-    });
-    console.log("generatePdf: before browser newPage");
-    const page = await browser.newPage();
-    // We set the page content as the generated html by handlebars
-    console.log("generatePdf: before setContent");
-    // await page.setContent(htmlTemplate, {waitUntil: 'networkidle0'});
-    await page.setContent(htmlTemplate, {waitUntil: 'networkidle0'});
-    // const htmlTest ="<html><body><h2>Hello</h2></body></html>";
-    // await page.setContent(htmlTemplate, {
-    //   waitUntil: ['domcontentloaded', 'networkidle0', 'load'],
-    // });
-    // We use pdf function to generate the pdf in the same folder as this file.
-    console.log("generatePdf: before page.pdf");
-    result = await page.pdf({ format: 'A4' });
-    await browser.close();
-    console.log("PDF Generated");
-  } catch (ex) {
-    console.log("generatePdf Error: " + ex);
-    throw new Error(JSON.stringify(ex));
-  }
-  return result;
-}
-
-export async function generatePdfOld(): Promise<any> {
-  console.log("generatePdf: begin");
-  let result: any = null;
-  let browser: any = null;
-  try {
-    console.log("generatePdf: before generateHTML");
-    const htmlTemplate = await generateHTML();
-    // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
-    // we are using headless mode
-    console.log("generatePdf: before puppeteer.launch");
-    browser = await puppeteerCore.launch({
-      args: process.env.IS_LOCAL ?  ['--no-sandbox'] : chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: process.env.IS_LOCAL
-        ? puppeteer.executablePath()
-        : await chromium.executablePath(),
-      headless: chromium.headless,
-      // ignoreHTTPSErrors: true,
-    });
-    // browser = await puppeteer.launch({
-    //   args: process.env.IS_LOCAL ? puppeteer.defaultArgs() : chromium.args,
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: process.env.IS_LOCAL
-    //     ? puppeteer.executablePath()
-    //     : await chromium.executablePath(),
-    //   headless: false,
-    //   ignoreHTTPSErrors: true,
-    // });
-    // browser = await puppeteer.launch({
-    //   args: chromium.args,
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: await chromium.executablePath(),
-    //   headless: chromium.headless,
-    // });
-    // browser = await puppeteer.launch({
-    //   args: chromium.args,
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: await chromium.executablePath(),
-    //   headless: chromium.headless,
-    //   ignoreHTTPSErrors: true,
-    // })
-    console.log("generatePdf: before browser newPage");
-    const page = await browser.newPage();
-    // We set the page content as the generated html by handlebars
-    console.log("generatePdf: before setContent");
-    await page.setContent(htmlTemplate, {waitUntil: 'networkidle0'});
-    // We use pdf function to generate the pdf in the same folder as this file.
-    console.log("generatePdf: before page.pdf");
-    result = await page.pdf({ format: 'A4' });
-    await browser.close();
-    console.log("PDF Generated");
-  } catch (ex) {
-    console.log("generatePdf Error: " + ex);
-    throw new Error(JSON.stringify(ex));
-  }
-  return result;
-}
-
-// export async function generatePdf(): Promise<any> {
-//   console.log("generatePdf: begin");
-//   let result: any = null;
-//   let browser: any = null;
-//   try {
-//     console.log("generatePdf: before generateHTML");
-//     const htmlTemplate = await generateHTML();
-//     // We can use this to add dyamic data to our handlebas template at run time from database or API as per need. you can read the official doc to learn more https://handlebarsjs.com/
-//     // we are using headless mode
-//     console.log("generatePdf: befor puppeteer.launch");
-//     browser = await puppeteer.launch();
-//     console.log("generatePdf: befor browser newPage");
-//     const page = await browser.newPage();
-//     // We set the page content as the generated html by handlebars
-//     console.log("generatePdf: befor setContent");
-//     await page.setContent(htmlTemplate, {waitUntil: 'networkidle0'});
-//     // We use pdf function to generate the pdf in the same folder as this file.
-//     console.log("generatePdf: befor page.pdf");
-//     result = await page.pdf({ format: 'A4' });
-//     await browser.close();
-//     console.log("PDF Generated");
-//   } catch (ex) {
-//     console.log("generatePdf Error: " + ex);
-//   }
-//   return result;
-// }
-
 export async function generateHTML(): Promise<any> {
   const data = {
     fullName: "bla bla",
@@ -348,7 +177,6 @@ export async function generateHTML(): Promise<any> {
   let html = await getTemplateHtml();
   // Now we have the html code of our template in res object
   // you can check by logging it on console
-  // console.log(res)
   console.log("Compiing the template with handlebars");
   const template = hb.compile(html, { strict: true });
   // we have compile our code with handlebars
