@@ -102,8 +102,10 @@ async function sendMail(file: any, sendTo: string) {
   try {
     const mailOptions = {
       from: {
-        name: "Elad Yefet",
-        address: "elad.y@metha.ai"
+        //name: "Elad Yefet",
+        //address: "elad.y@metha.ai"
+        name: "Metha AI - Don't Reply",
+        address: "dont-reply@metha.ai"
       },
       to: sendTo,
       subject: "Your report is ready - Test",
