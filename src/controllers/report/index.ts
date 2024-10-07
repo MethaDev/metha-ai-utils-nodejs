@@ -11,6 +11,7 @@ import puppeteer from "puppeteer";
 import chromium from "@sparticuz/chromium";
 import nodemailer from "nodemailer";
 import * as AWSClientSES from "@aws-sdk/client-ses";
+import { KMSClient, DecryptCommand, DecryptCommandInput } from "@aws-sdk/client-kms";
 import SESTransport from "nodemailer/lib/ses-transport";
 
 config();
@@ -30,6 +31,8 @@ let ses: AWSClientSES.SES;
 let transporter: nodemailer.Transporter<SESTransport.SentMessageInfo>;
 
 async function initSES() {
+  const keyTest = await decryptEnvVar("TEST_KEY");
+  console.log("key test: " + keyTest);
   ses = new AWSClientSES.SES({
     apiVersion: "2012-10-17",
     region: process.env.SES_REGION || "us-east-1",
@@ -205,3 +208,25 @@ export const generateTemplateOld = asyncHandler(
       res.send(pdf)
   }
 );
+
+const client = new KMSClient({region: 'us-east-1'});
+
+async function decryptEnvVar(name: string) {
+  try {
+      const encrypted: string = process.env[name] || "";
+      const req: DecryptCommandInput = {
+        CiphertextBlob: Buffer.from(encrypted, 'base64'),
+        EncryptionContext: { LambdaFunctionName: process.env.AWS_LAMBDA_FUNCTION_NAME || ""},
+      };
+      const command = new DecryptCommand(req);
+      const response = await client.send(command);
+      const decrypted = new TextDecoder().decode(response.Plaintext);
+ 
+      process.env[name] = decrypted;
+      return decrypted;
+    } catch (err) {
+      console.log('Decrypt error:', err);
+      throw err;
+    }
+ }
+ 

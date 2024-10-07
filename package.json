@@ -30,7 +30,8 @@
     "url": "https://github.com/rodrigokamada/nodejs-aws-lambda/issues"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.624.0",
+    "@aws-sdk/client-kms": "3.624.0",
+    "@aws-sdk/client-ses": "3.624.0",
     "@puppeteer/browsers": "^2.4.0",
     "@sparticuz/chromium": "127.0.0",
     "aws-serverless-express": "^3.4.0",
