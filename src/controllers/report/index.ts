@@ -31,14 +31,29 @@ let ses: AWSClientSES.SES;
 let transporter: nodemailer.Transporter<SESTransport.SentMessageInfo>;
 
 async function initSES() {
-  const keyTest = await decryptEnvVar("TEST_KEY");
-  console.log("key test: " + keyTest);
+  // const keyTest = await decryptEnvVar("TEST_KEY");
+  const accessKeyId: string = await decryptEnvVar("SES_ACCESS_KEY_ID");
+  const secretAccessKey: string = await decryptEnvVar("SES_SECRET_ACCESS_KEY");
+  // console.log("key test: " + keyTest);
+  // ses = new AWSClientSES.SES({
+  //   apiVersion: "2012-10-17",
+  //   region: process.env.SES_REGION || "us-east-1",
+  //   credentials: {
+  //     accessKeyId: process.env.SES_ACCESS_KEY_ID || "",
+  //     secretAccessKey: process.env.SES_SECRET_ACCESS_KEY || "",
+  //   },
+  // });
+
+  console.log("sesREGION = " + process.env.SES_REGION || "us-east-1");
+  console.log("accessKeyId = " + accessKeyId);
+  console.log("secretAccessKey = " + secretAccessKey);
+
   ses = new AWSClientSES.SES({
     apiVersion: "2012-10-17",
     region: process.env.SES_REGION || "us-east-1",
     credentials: {
-      accessKeyId: process.env.SES_ACCESS_KEY_ID || "",
-      secretAccessKey: process.env.SES_SECRET_ACCESS_KEY || "",
+      accessKeyId: accessKeyId,
+      secretAccessKey: secretAccessKey,
     },
   });
 
