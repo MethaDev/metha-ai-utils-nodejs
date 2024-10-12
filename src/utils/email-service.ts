@@ -4,10 +4,6 @@ import SESTransport from "nodemailer/lib/ses-transport";
 import { decryptEnvVar } from "./decrypt"
 import { isNil } from "lodash";
 
-console.log("SES_REGION = " + process.env.SES_REGION);
-console.log("SES_ACCESS_KEY_ID = " + process.env.SES_ACCESS_KEY_ID);
-console.log("SES_SECRET_ACCESS_KEY = " + process.env.SES_SECRET_ACCESS_KEY);
-
 let ses: AWSClientSES.SES = null;
 let transporter: nodemailer.Transporter<SESTransport.SentMessageInfo> = null;
 
