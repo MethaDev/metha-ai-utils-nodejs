@@ -9,10 +9,7 @@ import { config } from "dotenv";
 import puppeteerCore from "puppeteer-core";
 import puppeteer from "puppeteer";
 import chromium from "@sparticuz/chromium";
-import nodemailer from "nodemailer";
-import * as AWSClientSES from "@aws-sdk/client-ses";
-import { KMSClient, DecryptCommand, DecryptCommandInput } from "@aws-sdk/client-kms";
-import SESTransport from "nodemailer/lib/ses-transport";
+import { emailService } from "../../utils/index";
 
 config();
 
@@ -22,48 +19,6 @@ chromium.setHeadlessMode = true;
 // await chromium.font(
 //   "https://raw.githack.com/googlei18n/noto-emoji/master/fonts/NotoColorEmoji.ttf"
 // );
-
-console.log("SES_REGION = " + process.env.SES_REGION);
-console.log("SES_ACCESS_KEY_ID = " + process.env.SES_ACCESS_KEY_ID);
-console.log("SES_SECRET_ACCESS_KEY = " + process.env.SES_SECRET_ACCESS_KEY);
-
-let ses: AWSClientSES.SES;
-let transporter: nodemailer.Transporter<SESTransport.SentMessageInfo>;
-
-async function initSES() {
-  // const keyTest = await decryptEnvVar("TEST_KEY");
-  const accessKeyId: string = await decryptEnvVar("SES_ACCESS_KEY_ID");
-  const secretAccessKey: string = await decryptEnvVar("SES_SECRET_ACCESS_KEY");
-  // console.log("key test: " + keyTest);
-  // ses = new AWSClientSES.SES({
-  //   apiVersion: "2012-10-17",
-  //   region: process.env.SES_REGION || "us-east-1",
-  //   credentials: {
-  //     accessKeyId: process.env.SES_ACCESS_KEY_ID || "",
-  //     secretAccessKey: process.env.SES_SECRET_ACCESS_KEY || "",
-  //   },
-  // });
-
-  console.log("sesREGION = " + process.env.SES_REGION || "us-east-1");
-  console.log("accessKeyId = " + accessKeyId);
-  console.log("secretAccessKey = " + secretAccessKey);
-
-  ses = new AWSClientSES.SES({
-    apiVersion: "2012-10-17",
-    region: process.env.SES_REGION || "us-east-1",
-    credentials: {
-      accessKeyId: accessKeyId,
-      secretAccessKey: secretAccessKey,
-    },
-  });
-
-  transporter = nodemailer.createTransport({
-    SES: {
-      ses,
-      aws: AWSClientSES
-    },
-  });
-}
 
 export const reportPDFEMail = asyncHandler(
     async (req: any, res: Response, next: NextFunction) => {
@@ -97,15 +52,15 @@ export const reportPDFDownload = asyncHandler(
 );
 
 async function sendMail(file: any, sendTo: string) {
-  await initSES();
+  const emailClient = await emailService();
   console.log("send mail ses sendTo " + sendTo);
   try {
     const mailOptions = {
       from: {
-        //name: "Elad Yefet",
-        //address: "elad.y@metha.ai"
-        name: "Metha AI - Don't Reply",
-        address: "dont-reply@metha.ai"
+        name: "Elad Yefet",
+        address: "elad.y@metha.ai"
+        // name: "Metha AI - Don't Reply",
+        // address: "dont-reply@metha.ai"
       },
       to: sendTo,
       subject: "Your report is ready - Test",
@@ -118,9 +73,7 @@ async function sendMail(file: any, sendTo: string) {
           ContentLength: file.length
       }],
     };
-
-    const response = await transporter.sendMail(mailOptions);
-
+    const response = await emailClient.sendMail(mailOptions);
   } catch (error) {
     console.error("SendMail: " + error);
   }
@@ -203,47 +156,3 @@ export async function generateHTML(): Promise<any> {
   const result = template(data);
   return result;
 }
-
-
-// --------------------------------------------------------------------------------------
-export const generateTemplateOld = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-      async function printPDF() {
-          const browser = await puppeteer.launch({ headless: true });
-          const page = await browser.newPage();
-          // await page.goto('https://blog.risingstack.com', {waitUntil: 'networkidle0'});
-          //   await page.goto('https://textologia.net/?p=16379', {waitUntil: 'networkidle0'});
-          await page.goto('http://metha.ai', { waitUntil: 'networkidle0' });
-          const pdf = await page.pdf({ format: 'A4' });
-
-          await browser.close();
-          return pdf
-      }
-
-      const pdf = await printPDF();
-      res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length })
-      res.send(pdf)
-  }
-);
-
-const client = new KMSClient({region: 'us-east-1'});
-
-async function decryptEnvVar(name: string) {
-  try {
-      const encrypted: string = process.env[name] || "";
-      const req: DecryptCommandInput = {
-        CiphertextBlob: Buffer.from(encrypted, 'base64'),
-        EncryptionContext: { LambdaFunctionName: process.env.AWS_LAMBDA_FUNCTION_NAME || ""},
-      };
-      const command = new DecryptCommand(req);
-      const response = await client.send(command);
-      const decrypted = new TextDecoder().decode(response.Plaintext);
- 
-      process.env[name] = decrypted;
-      return decrypted;
-    } catch (err) {
-      console.log('Decrypt error:', err);
-      throw err;
-    }
- }
- 
